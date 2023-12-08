@@ -1,0 +1,204 @@
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import filedialog
+import docx
+import io
+import numpy as np
+# Biến để lưu trữ tất cả các kết quả và dãy số dùng để tính toán
+tat_ca_ket_qua = []
+
+def tinh_toan_tu_giao_dien():
+    def du_doan_so_tiep_theo():
+        day_so_input = entry.get()
+        try:
+            danh_sach_so = [int(so) for so in day_so_input.split(',')]
+            if not danh_sach_so or not all(isinstance(so, int) for so in danh_sach_so):
+                raise ValueError("Vui lòng nhập đúng dãy số nguyên và các số ngăn cách nhau bởi dấu phẩy.")
+        except ValueError:
+            messagebox.showerror("Lỗi", "Vui lòng nhập đúng dãy số nguyên và các số ngăn cách nhau bởi dấu phẩy.")
+            return
+
+        # Dự đoán số tiếp theo bằng thuật toán hồi quy của numpy
+        if len(danh_sach_so) < 2:
+            messagebox.showwarning("Cảnh báo", "Dãy số phải có ít nhất hai phần tử để dự đoán số tiếp theo.")
+            return
+
+        x = np.array(danh_sach_so[:-1])
+        y = np.array(danh_sach_so[1:])
+        coefficient = np.polyfit(x, y, 1)
+
+        # Dự đoán số tiếp theo
+        so_tiep_theo = int(coefficient[0] * danh_sach_so[-1] + coefficient[1])
+
+        # Hiển thị thông báo
+        messagebox.showinfo("Dự đoán số tiếp theo", f"Số tiếp theo trong dãy số là: {so_tiep_theo}")
+    def chon_file():
+        file_paths = filedialog.askopenfilenames(title="Chọn file", filetypes=[("Text files", "*.txt"), ("Word files", "*.docx")])
+        if file_paths:
+            try:
+                # Lưu dữ liệu dãy số
+                du_lieu_day_so = [doc_du_lieu_tu_file(file_path) for file_path in file_paths]
+                entry.delete(0, tk.END)
+                entry.insert(0, ' '.join(du_lieu_day_so))
+            except ValueError as e:
+                messagebox.showerror("Lỗi", str(e))
+
+    def doc_du_lieu_tu_file(file_path):
+        try:
+            if file_path.lower().endswith('.txt'):
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    return file.read().strip()
+            elif file_path.lower().endswith('.docx'):
+                doc = docx.Document(file_path)
+                return ' '.join([paragraph.text for paragraph in doc.paragraphs])
+            else:
+                raise ValueError("Định dạng file không được hỗ trợ")
+        except FileNotFoundError:
+            raise ValueError(f"Tập tin không tồn tại: {file_path}")
+        except Exception as e:
+            raise ValueError(f"Lỗi khi đọc dữ liệu từ file: {str(e)}")
+
+    def on_button_click(chuc_nang):
+        day_so_input = entry.get()
+        try:
+            danh_sach_so = [int(so) for so in day_so_input.split(',')]
+            if not danh_sach_so or not all(isinstance(so, int) for so in danh_sach_so):
+                raise ValueError("Vui lòng nhập đúng dãy số nguyên và các số ngăn cách nhau bởi dấu phẩy.")
+        except ValueError:
+            messagebox.showerror("Lỗi", "Vui lòng nhập đúng dãy số nguyên và các số ngăn cách nhau bởi dấu phẩy.")
+            return
+
+        # Xử lý các chức năng tương ứng
+        if chuc_nang == "min":
+            ket_qua = min(danh_sach_so)
+        elif chuc_nang == "max":
+            ket_qua = max(danh_sach_so)
+        elif chuc_nang == "avg":
+            ket_qua = sum(danh_sach_so) / len(danh_sach_so)
+        elif chuc_nang == "max_am":
+            ket_qua = max([so for so in danh_sach_so if so < 0], default=None)
+        elif chuc_nang == "min_am":
+            ket_qua = min([so for so in danh_sach_so if so < 0], default=None)
+        elif chuc_nang == "max_duong":
+            ket_qua = max([so for so in danh_sach_so if so > 0], default=None)
+        elif chuc_nang == "min_duong":
+            ket_qua = min([so for so in danh_sach_so if so > 0], default=None)
+        elif chuc_nang == "tong":
+            ket_qua = sum(danh_sach_so)
+        else:
+            ket_qua = "Chức năng không xác định"
+
+        # Lưu kết quả vào biến và hiển thị thông báo
+        ket_qua_message = f"Kết quả {chuc_nang}: {ket_qua}"
+        du_lieu_day_so = f"Dữ liệu đầu vào: {day_so_input}"
+        ket_qua_full = f"{du_lieu_day_so}\n{ket_qua_message}"
+        tat_ca_ket_qua.append(ket_qua_full)
+
+        # Hiển thị thông báo
+        messagebox.showinfo("Kết quả", ket_qua_message)
+
+    def luu_ket_qua_vao_file():
+        try:
+            file_path = filedialog.asksaveasfilename(defaultextension=".txt", filetypes=[("Text files", "*.txt")])
+            if file_path:
+                with io.open(file_path, 'w', encoding='utf-8') as file:
+                    file.write('\n\n'.join(tat_ca_ket_qua))
+                messagebox.showinfo("Thông báo", "Đã lưu kết quả vào file thành công.")
+        except Exception as e:
+            messagebox.showerror("Lỗi", f"Lỗi khi lưu kết quả vào file: {str(e)}")
+
+    def tinh_toan_tat_ca_cung_luc():
+        day_so_input = entry.get()
+        try:
+            danh_sach_so = [int(so) for so in day_so_input.split(',')]
+            if not danh_sach_so or not all(isinstance(so, int) for so in danh_sach_so):
+                raise ValueError("Vui lòng nhập đúng dãy số nguyên và các số ngăn cách nhau bởi dấu phẩy.")
+        except ValueError:
+            messagebox.showerror("Lỗi", "Vui lòng nhập đúng dãy số nguyên và các số ngăn cách nhau bởi dấu phẩy.")
+            return
+
+        # Tính toán tất cả các chức năng và lưu kết quả vào biến
+        ket_qua_min = min(danh_sach_so)
+        ket_qua_max = max(danh_sach_so)
+        ket_qua_avg = sum(danh_sach_so) / len(danh_sach_so)
+        ket_qua_max_am = max([so for so in danh_sach_so if so < 0], default=None)
+        ket_qua_min_am = min([so for so in danh_sach_so if so < 0], default=None)
+        ket_qua_max_duong = max([so for so in danh_sach_so if so > 0], default=None)
+        ket_qua_min_duong = min([so for so in danh_sach_so if so > 0], default=None)
+        ket_qua_tong = sum(danh_sach_so)
+
+        # Lưu kết quả vào biến và hiển thị thông báo
+        du_lieu_day_so = f"Dữ liệu đầu vào: {day_so_input}"
+        ket_qua_min_full = f"{du_lieu_day_so}\nKết quả min: {ket_qua_min}"
+        ket_qua_max_full = f"{du_lieu_day_so}\nKết quả max: {ket_qua_max}"
+        ket_qua_avg_full = f"{du_lieu_day_so}\nKết quả avg: {ket_qua_avg}"
+        ket_qua_max_am_full = f"{du_lieu_day_so}\nKết quả max_am: {ket_qua_max_am}"
+        ket_qua_min_am_full = f"{du_lieu_day_so}\nKết quả min_am: {ket_qua_min_am}"
+        ket_qua_max_duong_full = f"{du_lieu_day_so}\nKết quả max_duong: {ket_qua_max_duong}"
+        ket_qua_min_duong_full = f"{du_lieu_day_so}\nKết quả min_duong: {ket_qua_min_duong}"
+        ket_qua_tong_full = f"{du_lieu_day_so}\nKết quả tong: {ket_qua_tong}"
+
+        # Lưu tất cả kết quả vào biến
+        tat_ca_ket_qua.extend([ket_qua_min_full, ket_qua_max_full, ket_qua_avg_full, ket_qua_max_am_full,
+                               ket_qua_min_am_full, ket_qua_max_duong_full, ket_qua_min_duong_full, ket_qua_tong_full])
+
+        # Hiển thị tất cả kết quả trên widget Text
+        text_widget.delete(1.0, tk.END)
+        text_widget.insert(tk.END, '\n\n'.join(tat_ca_ket_qua))
+
+        # Hiển thị thông báo
+        messagebox.showinfo("Kết quả", "Đã tính toán tất cả các chức năng cùng một lúc.")
+
+    # Tạo cửa sổ giao diện
+    root = tk.Tk()
+    root.title("Tính toán dãy số")
+
+    label = tk.Label(root, text="Nhập dãy số nguyên, cách nhau bởi dấu phẩy hoặc chọn file:")
+    label.pack()
+
+    entry = tk.Entry(root, width=40)
+    entry.pack()
+
+    button_chon_file = tk.Button(root, text="Chọn File", command=chon_file)
+    button_chon_file.pack()
+
+    button_min = tk.Button(root, text="Số nhỏ nhất", command=lambda: on_button_click("min"))
+    button_min.pack()
+
+    button_max = tk.Button(root, text="Số lớn nhất", command=lambda: on_button_click("max"))
+    button_max.pack()
+
+    button_avg = tk.Button(root, text="Trung bình cộng", command=lambda: on_button_click("avg"))
+    button_avg.pack()
+
+    button_max_am = tk.Button(root, text="Số nguyên âm lớn nhất", command=lambda: on_button_click("max_am"))
+    button_max_am.pack()
+
+    button_min_am = tk.Button(root, text="Số nguyên âm nhỏ nhất", command=lambda: on_button_click("min_am"))
+    button_min_am.pack()
+
+    button_max_duong = tk.Button(root, text="Số nguyên dương lớn nhất", command=lambda: on_button_click("max_duong"))
+    button_max_duong.pack()
+
+    button_min_duong = tk.Button(root, text="Số nguyên dương nhỏ nhất", command=lambda: on_button_click("min_duong"))
+    button_min_duong.pack()
+
+    button_tong = tk.Button(root, text="Tổng", command=lambda: on_button_click("tong"))
+    button_tong.pack()
+
+    button_tat_ca = tk.Button(root, text="Tính tất cả cùng một lúc", command=tinh_toan_tat_ca_cung_luc)
+    button_tat_ca.pack()
+
+    button_luu_ket_qua = tk.Button(root, text="Lưu kết quả vào file", command=luu_ket_qua_vao_file)
+    button_luu_ket_qua.pack()
+    
+    button_du_doan = tk.Button(root, text="Dự đoán số tiếp theo", command=du_doan_so_tiep_theo)
+    button_du_doan.pack()
+    # Tạo một widget Text để hiển thị tất cả kết quả
+    text_widget = tk.Text(root, wrap='word', width=50, height=15)
+    text_widget.pack()
+
+    root.mainloop()
+
+# Thực hiện ứng dụng
+tinh_toan_tu_giao_dien()
