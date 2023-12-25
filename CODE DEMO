@@ -1,94 +1,16 @@
 import sympy as sp
-import matplotlib.pyplot as plt
-import numpy as np
-def nhap_ham_so():
-    x = sp.symbols('x')
-    expression_str = input("Nhập hàm số (sử dụng 'x' là biến): ")
-    expression = sp.sympify(expression_str)
-    return x, expression
-def dao_ham_cap_cao(expression, x, n):
-    derivate = sp.diff(expression, x, n)
-    return derivate
-def tinh_nguyen_ham(expression, x):
-    integral = sp.integrate(expression, x)
-    return integral
-def giai_phuong_trinh(expression, x):
-    solutions = sp.solve(expression, x)
-    return solutions
-def ve_do_thi(expression, x, range_start, range_end):
-    x_vals = np.linspace(range_start, range_end, 1000)
-    y_vals = [expression.subs(x, val) for val in x_vals]
-    plt.plot(x_vals, y_vals)
-    plt.title("Đồ thị hàm số")
-    plt.xlabel("x")
-    plt.ylabel("f(x)")
-    plt.grid(True)
-    plt.show()
-def tinh_dien_tich(expression, x, range_start, range_end):
-    area = sp.integrate(expression, (x, range_start, range_end))
-    return area
-def tim_diem_cuc_tri(expression, x):
-    critical_points = sp.solve(sp.diff(expression, x), x)
-    extreme_points = []
-    for point in critical_points:
-        second_derivative = sp.diff(expression, x, 2).subs(x, point)
-        if second_derivative > 0:
-            extreme_points.append({"point": point, "type": "Cực tiểu"})
-        elif second_derivative < 0:
-            extreme_points.append({"point": point, "type": "Cực đại"})
-    return extreme_points
-def nhap_ham_so_2():
-    x = sp.symbols('x')
-    expression_str = input("Nhập hàm số thứ hai (sử dụng 'x' là biến): ")
-    expression_2 = sp.sympify(expression_str)
-    return x, expression_2
-def tinh_dien_tich_hai_ham_so(expression_1, expression_2, x, range_start, range_end):
-    intersections = sp.solve(sp.Eq(expression_1, expression_2), x)
-    if len(intersections) != 2:
-        print("Hai hàm số không giao nhau đúng hai điểm.")
-        return None
-    intersections.sort()
-    area = sp.integrate(expression_1 - expression_2, (x, intersections[0], intersections[1]))
-    return abs(area)
-def kiem_tra_lien_tuc(expression, x, a):
-    limit_left = sp.limit(expression, x, a, dir='-')
-    limit_right = sp.limit(expression, x, a, dir='+')
-    if limit_left == limit_right:
-        return True
-    else:
-        return False
 def main():
-    x, ham_so = nhap_ham_so()
-    # Chức năng 1: Tính đạo hàm
-    n = int(input("Nhập bậc của đạo hàm cần tính: "))
-    derivate = dao_ham_cap_cao(ham_so, x, n)
-    print(f"Đạo hàm bậc {n}: {derivate}")
-    # Chức năng 2: Tính nguyên hàm
-    integral = tinh_nguyen_ham(ham_so, x)
-    print(f"Nguyên hàm của hàm số: {integral}")
-    # Chức năng 3: Giải phương trình f(x) = 0
-    solutions = giai_phuong_trinh(ham_so, x)
-    print(f"Nghiệm của phương trình: {solutions}")
-    # Chức năng 4: Vẽ đồ thị hàm số
-    range_start, range_end = map(float, input("Nhập khoảng giá trị x (bắt đầu và kết thúc, cách nhau bởi dấu cách): ").split())
-    ve_do_thi(ham_so, x, range_start, range_end)
-    # Chức năng 5: Tính diện tích hình phẳng giới hạn bởi hàm số và đường thẳng
-    range_start, range_end = map(float, input("Nhập khoảng giá trị x để tính diện tích (bắt đầu và kết thúc, cách nhau bởi dấu cách): ").split())
-    area = tinh_dien_tich(ham_so, x, range_start, range_end)
-    print(f"Diện tích hình phẳng giới hạn bởi hàm số và đường thẳng: {area}")
-    # Chức năng 6: Tìm điểm cực trị
-    extreme_points = tim_diem_cuc_tri(ham_so, x)
-    print(f"Các điểm cực trị của hàm số:")
-    for point in extreme_points:
-        print(f"{point['type']} tại x = {point['point']}")
-    # Chức năng 7: Tính diện tích giới hạn bởi hai đồ thị hàm số
-    x_2, ham_so_2 = nhap_ham_so_2()
-    area_between_functions = tinh_dien_tich_hai_ham_so(ham_so, ham_so_2, x, range_start, range_end)
-    if area_between_functions is not None:
-        print(f"Diện tích giới hạn bởi hai hàm số: {area_between_functions}")
-    # Chức năng 8: Kiểm tra tính liên tục
-    a = float(input("Nhập giá trị cần kiểm tra tính liên tục tại x = a: "))
-    is_continuous = kiem_tra_lien_tuc(ham_so, x, a)
-    print(f"Hàm số {'liên tục' if is_continuous else 'không liên tục'} tại x = {a}")
+    x = sp.symbols('x')
+    expression_str = input(" ")
+    try:
+        expression = sp.sympify(expression_str)
+        derivative = sp.diff(expression, x)
+        print(f"derivative of {expression_str}: {derivative}")
+
+        original = sp.integrate(expression, x)
+        print(f"original function of {expression_str}: {original}")
+
+    except sp.SympifyError as e:
+        print(f"ERROR: {e}")
 if __name__ == "__main__":
     main()
