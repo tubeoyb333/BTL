@@ -1,0 +1,65 @@
+I. Phân tích mã nguồn:
+  Mã nguồn có chức năng chính đó là tính đạo hàm và nguyên hàm của 1 hàm số, sử dụng thư viện sympy.
+  1. Nhập dữ liệu:
+  sử dụng input() để nhận một biểu thức hàm số từ người dùng thông qua giao diện dòng lệnh.
+  2. Chuẩn bị Biểu thức và Biến:
+  Sử dụng sympy.symbols('x') để định nghĩa biến x trong biểu thức hàm số.
+  3. Chuyển đổi Biểu thức:
+  Sử dụng sympy.sympify(expression_str) để chuyển đổi biểu thức từ chuỗi nhập vào thành một đối tượng biểu thức có thể sử dụng được bởi sympy.
+  6. Chức năng Tính Đạo Hàm:
+  Sử dụng sympy.diff() để tính đạo hàm của biểu thức theo biến x.
+  7. Chức năng Tính Nguyên Hàm:
+  Sử dụng sympy.integrate() để tính nguyên hàm của biểu thức theo biến x.
+  8. Xử lý Ngoại lệ:
+  Sử dụng try và except để xử lý trường hợp người dùng nhập một biểu thức không hợp lệ.
+  10. Hiển thị Kết Quả:
+  Sử dụng print() để hiển thị đạo hàm và nguyên hàm của biểu thức.
+II. Bản phân tích và ý tưởng phát triển mã nguồn:
+  Ý tưởng thiết kế: hỗ trợ cho nhiều mục đích khác nhau liên quan đến tính toán và phân tích hàm số. Cần có độ thuận lợi khi sử dụng, phân tích hàm số, tương tác dễ dàng, ứng dụng trong giáo dục và hỗ trợ học tập nhất là trong toán học
+  Thiết kế ứng dụng GUI sử dụng thư viện Tkinter và Matplotlib để tạo một giao diện người dùng cho việc thực hiện các phép toán toán học trên hàm số
+  Mỗi chức năng đều kiểm tra tính hợp lệ của biểu thức và biến trước khi thực hiện tính toán.
+  SymPy được sử dụng để thực hiện các phép toán toán học và tính toán biểu thức.
+  Các chức năng có thể phát triển:
+  1. Tính đạo hàm
+  Lấy biểu thức hàm số từ ô nhập và kiểm tra tính hợp lệ của biểu thức và biến.
+  Sử dụng thư viện SymPy để tính đạo hàm của biểu thức với bậc n.
+  Hiển thị kết quả đạo hàm.
+  2. Tính Nguyên Hàm
+  Lấy biểu thức hàm số từ ô nhập và kiểm tra tính hợp lệ của biểu thức và biến.
+  Sử dụng thư viện SymPy để tính nguyên hàm của biểu thức.
+  Hiển thị kết quả nguyên hàm.
+  3. Giải Phương Trình 
+  Lấy biểu thức hàm số từ ô nhập và kiểm tra tính hợp lệ của biểu thức và biến.
+  Sử dụng thư viện SymPy để giải phương trình.
+  Hiển thị kết quả nghiệm của phương trình.
+  4. Tính Diện Tích Giữa Hàm Số và Đường Thẳng
+  Lấy biểu thức hàm số từ ô nhập và kiểm tra tính hợp lệ của biểu thức và biến.
+  Nhập khoảng giá trị x.
+  Sử dụng thư viện SymPy để tính diện tích hình phẳng giới hạn bởi hàm số và 2 đường thẳng.
+  Hiển thị kết quả diện tích.
+  5. Tìm Điểm Cực Trị
+  Lấy biểu thức hàm số từ ô nhập và kiểm tra tính hợp lệ của biểu thức và biến.
+  Sử dụng thư viện SymPy để tìm các điểm cực trị và loại của chúng.
+  Hiển thị kết quả các điểm cực trị.
+  6. Tính Diện Tích Giữa Hai Hàm Số 
+  Lấy biểu thức hàm số thứ nhất từ ô nhập và kiểm tra tính hợp lệ của biểu thức và biến.
+  Nhập biểu thức hàm số thứ hai.
+  Sử dụng thư viện SymPy để tính diện tích giới hạn bởi hai hàm số.
+  Hiển thị kết quả diện tích.
+  7. Kiểm Tra Tính Liên Tục
+  Lấy biểu thức hàm số từ ô nhập và kiểm tra tính hợp lệ của biểu thức và biến.
+  Nhập giá trị x cần kiểm tra tính liên tục.
+  Sử dụng thư viện SymPy để tính giới hạn ở bên trái và bên phải của x và kiểm tra tính liên tục.
+  Hiển thị kết quả kiểm tra tính liên tục.
+  8. Đồ Thị Hàm Số:
+  Sử dụng Matplotlib để vẽ đồ thị hàm số và điểm cực trị.
+  Cập nhật đồ thị mỗi khi người dùng nhập một biểu thức mới.
+  9. Dữ Liệu từ Excel:
+  Cho phép người dùng nhập dữ liệu từ tệp tin Excel và chọn hàm số từ danh sách để thực hiện các phép toán.
+  10. Lưu Kết Quả:
+  Lưu kết quả tính toán và đồ thị vào tệp tin Word và hình ảnh PNG.
+  11. Giao diện:
+  Tạo giao diện người dùng với các thành phần như nhãn, ô nhập, nút, v.v.
+  Hiển thị đồ thị của hàm số theo biểu thức nhập vào và các điểm cực trị trên đồ thị.
+  Cung cấp nhiều chức năng tính toán như đạo hàm, nguyên hàm, giải phương trình, tính diện tích giữa các hàm số, kiểm tra tính liên tục, và lưu kết quả.
+  Cho phép người dùng nhập dữ liệu từ một tệp Excel và chọn hàm số từ danh sách.
